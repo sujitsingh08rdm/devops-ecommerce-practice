@@ -1,0 +1,293 @@
+--- we have installed all the depedency for frontend and backend --- have wrote a basic code ---
+
+CODE
+
+----STORE, AUTH SLICE, REACT ROUTING, LOGIN/REGISTER UI ----
+
+1. install react router dom and wrap Browser router around app component
+2. now will crete  a store for react redux 
+3. create a slice for aauth, auth reducers, add slice reducer to the global reducer in store
+4. now connect the store to react application
+5. now we created a layout for auth login, create file called layout in compoennt, and pages for login and register
+6. drafted the loyout page for AUth, added a oUtlet for showing the chil elements,
+7. adding Routes to app componennts for layout, login and register
+8. create two folder inside pages for admin-view and shopping view and also inside components
+9. in admin Layout , create a layout sidebar, and header.
+10. add route for AdminLayout, also add child routes with pages of dashboard, products, order, and freatures. this is done
+11. Now we have to to exact thing for shopping. now craete the shopping route. for now have just created the layout and header for shopping. 
+12. creaet a not found route incase user give some url that does not exists
+13. now craete pages for shopping view, listing, home, checkout, account, and add child routes to shopping
+14. now we have to implement a auth logic, like admin can only access the admin realted compoents/pages and, user can visit the shooping realted pages.
+15. now create a common auth compoent that can be used to fulfil the auth login
+16. that checker compoent should be acalled checkAuth, it shold have authcheck, user object, and children as prop, we will be using it as a route guard. 
+17. now the case . if user is not auth and its accessing any page other than login or register then redidrect to login page, if user is auth ad its visiting login/register then redirect it to admin page if role is admin otherwise to shop page. if user is auth and user role is admin and its visiting shop then redirect it to dashboard. if user is auth and normal user then redict it to un-auth page.
+18. now guard the parent routes.
+19. now we be working on the login and reigster UI. since these compoent  have similar kinda form, so we be creating a common form for this purpose.
+20. for this we need , input, select, label, textarea from shadcn.
+21. for this form we need a config data , so craete a config folder, create a sample data for register, this should have three object, for username, password and email. Reason why we are doing this is to we dont to to manually do this for like login and register. 
+22. back to from, we loop over the formControl Array suing map and show Label, and create a util functionto renderInputByComponent.
+23. in renderInputByComponent do a switch statement if input put the element as input and return ans if selcted then do as select and also textarea.
+24. now other then formCOntrols, this commonForm should have formData, setFormData, onSubmit and buttonText as props
+25. at end of formcontrol, i mean after it. add a button with ButtonTetContent . and apply onSubmit on button.
+26. now from formData we have to get the value of the name/email/password so we just give it like formData["key"], and pass the value to select/inpu/textarea
+27. appyly onCHange on select/input/textarea with e.target.value checkcode for ref
+28.now we will be painting the register page. and login page, give inialState from localCompoennt.
+
+---- BAckEND LOGIC //for REGISTER CONTROLLER AND ROUTES ----
+
+1. create folders for controller, models and routes.
+2. create users models, 
+a Schema for Username, email, passowrd, role.
+3. and export the models
+4. create auth contrller for reigster, login and logout and  auth
+5. asic try catch for error handling, 
+6. Now we have to hash the passowrd. in register controller. and export this 
+7. Now we work on ROUTING
+8. its actually we are telling by which route which , we need to call which route.
+9. now we switch to server js , and import that register controller and use app.use middleware to authROuter. 
+10. now we go back to React side, we to create a user from the client side using redux.
+
+---- Register and Login functionality in Both server/client ----
+
+1. Check what we are getting in formData of register.
+2. Now create a async thunk to the register route of api and pass the formdata.in auth-slice 
+3. now add builder cases to the registerUser
+4. now we have to pass this formData to the server. how e can do it, is by onSUbmit fnc wehn we click the register button
+5. when registerUser is scuessfull the naviagte to login page. w will get the data in DB also.
+6. Now we add toast , toaster added, add toaster component in main just below app. and , useToaster in register.
+ALso have added a case where user is entering exsintg emial to registration.
+7. now we have to work on Login controller, when user logs in, we will redirect them to amin/shop based on user Type.
+8. In Login COnttroller, we will first check that user exist or not by using findOne method. if it donest exist send resonpse wit messge, similaraly we compare passowrd and if it donest match send a message.
+9. now create atoken, if all good, and also ad cookie. export it and import in authROutes and use MEthod on it.
+10. so copy paste same code for register for login in slice.
+11. add cases for loginnUSer, create onSubmit function when user clcik on login.
+12. since this loginUser return res.data, which is a promise so we again use then to log te data, t check what is coming when we are submititng thelogin..
+13. now check with if else if sucess toast with message.
+14. useSlector hook to get state data of isAth and user.
+15. After auth is done and we refresh its logging out. this is not we wanted, we catch up tomorrow and fix this
+16. Create logout controller, its will simply clearCookie , clear cookie recieves "token" as argumnet.
+17. now create Auth Middleare,  it its gonna check whether user is Authenticated when user refresh the page
+18. in  isAuth controller check if token doesnt eixst if it donesnt exist then we make success as false, i didnt understood that try catch block in authmiddleare(TODO), export it and import in AuthRoutess.
+19. Add a route "check-auth" to cehck a is user is auth, get user details from req.user() and send success status.
+20. now crate a sync thunk for checking auth in frontend.
+21. use the backend route to get res and return res data.
+22. use extrareducers on it.
+23. now we need t o dispatch it whenever use loads a page.
+24. disaptach is using useEffect in App component.
+25. its owrking , but there is some daelay, so do soemthing like a loading spinner while its laod.
+26. there is a issue when we try different path other than  shop/home, its redirect it to login/ and again login will check and redirect it toshp/home raher than dsired path.. so fix this make isLoading as true in initialState or pageload.
+27. so fix this make isLoading as true in initialState or pageload.... how this is working.?? how is it wokring, now if loading then return loaidn div, but incase it false then what happens is checkauth gets called and is Authenticated is false  and again it checkAuth and it redirect to login and then to default path, so to fix this just set the isLoadin g to true.
+28. replace the loading component with skeleton.
+
+---- ADmin header, isdebar and products ----
+
+1. admin header -> create a header inside it there should be abutton that is visblein sm screen for toggle that will show sidebars on click of it. Then create div for button for logging out.
+2. sidebar -> create aside el , adiv inside it, onlcik to got dashboard -> sindie it a logo and a TItle like admin Panel.
+3. create a menuItems compoent inside the sidebar, for this we have to go create menuItemconfig , it should haeve id, label and path and icon.
+4.now loop this array in Menu Items and display the icon and label. in lg screen its hsowing, now have to work in sm scrren when clicked on toggle , a sheet will we shown. pass that state open,setOPen in header
+5. now pass setOpen as Prop in this sheet's Menu items.Now we be working on the product pages. From here on the most of functionality we are going to work on.
+6. Product page ,a<> then a div and inside add a button to add new product. another div for grid. adda sheet from shadcn to add new product. add openCHange to button to ture when,ciked, and false on sheet whenever use click outside,
+7. Now below header we will render our form elements using common form, pass formDta, setFormData, buttonText, formCOntrol and onSubmit. creaet aonly inialState for formData. its working .
+8. now we have to wokr on image upload. create a file inside admin> imageupload. in image upload there should be a label and input type as file. and imprt it in our product page.
+9. we need sttate for image upload. create it in products. and we willb needing the last uploaded image url from cloudinary. store it in diff state. pass these states as props in imageUpload.
+10. Add a ref and onChange property to the imageUpload input. add handleImageFileChange, setSelected file as selectedFile.
+User        ->   ActionTriggered  ->Function
+Click        ->    label/input ->	handleImageFileChange
+Drag & drop into  -> box	    ->  handleDrop
+11. if there is no imageFile.
+then render an LAbel to upload iamge, it should drag & drop or click to upload. drag and drop is acheived using htmlFOr.
+12. add a dragoer and drop to the parent div to manage drag/drop .if there is already file uploaded then wegive file inforamtion.
+13. Add a button to remove image, to reove add onCLick to remove, it should ssetImg to nul and input ref value = "", 
+14. now we have to work on Backend logic for file upload. Go to cloudinary site, create a helper folder for cloudinary.
+15. create config for config, have to craete sotrage instance, we will use multer, create funciton to handleImageUpload to cloudinary. create storage  var and passs sotrage in multer
+16. we need a api route to hit it from frontend, to get it done we have to create controller creat admin, in controller write login for imageUpload, convert it to base64, then URL and put rsult  and pass url in imageUploadUtil.and export handleImage.
+17.import this handleImage in Routes. use post method to upload image, and upload 
+18.import this router in server and use it.
+19. now useEFFECT in imageUpload in frontend. pss imageFile as depedency , whenever imageFIle chages , this uploadImage fnc gets caled, and this image file is not null then call uploadImage to CLoudinary func.
+20. UploadImage to cloudinary, createa formData, then apped "file" as key and imageFIle as value. send a post req to upload if res ok then set the image url. also creata a loading state. so createa loadingState in proudct page, pass setLoading to image upload,.
+21.
+
+---- products form Submission ----
+1. We are going to do four thing in this part, Submit the product , fetch the product to display it in UI, eid thte product and detlete the product.
+2. so first we will start with apri route, controller and models. fr product. create product model. and export the model name it as Product.
+3. now ceate controller for add, fetch and eelete and edit and export it.
+4. for add Ne produt get the data from req.body., import PRoduct model as newCreatePRod
+and and give the data from req.body to this rpod dn save it to DB. send the res then.
+5. for fetch all product ge the listofproducts by using find method, and send a res.
+6. now in edi tproduct get the id form req.body and fidnbuID the its doesnt exist send a erorr status and it it exist then mutuate the data from req.body datas. and save this findProducts send a success status with data
+7. for delte just get id from params and use it to detle product by FindByIDandDelete.
+8. Now update the routes. for four of them.and the bacned setup is done as of now.
+9.now we have to create admin product slice,.
+10. name it adminProductSlice, give it a initialState isLoading and productList.
+11. creat four async thunk for the functionality. first one for addProduct. give the formData as param to this function and get the result data. in fetchAll products get the list of produdc usig n axios and reutrn the result data
+12. FOr Edit PRoduct, we need id and formData , give post method to axios and add id at end and return result data. and create also thunk for delete product
+13. now add builder cases for this redcuer. for peding , fulfilled and rejected. for fullfiled do action payllad, and log what we are getting, for rejected hust as empty array
+14. now we go to our main store. 
+15. add a skeleton compoent for loading state when user is loading the file.
+16. now we have to work on onSubmit functionality of product button. before that useEefect to dipatch the fetchAllProductsData.
+17. now dispatch the addNewPRoduct with the image url , and fow now it should log socrrectly the data.
+18. if payload if sucecssfull then we need to reset the form, close the modal, fetch the list of product and make a toast . also this data is getting saed in DB
+19. inside aDmin ceate a nuew compoent for product naem it product-tile.
+20. install card and badge from shadcn, in this adminrpdocuttile first encloseure will be Card then a div >div>img. then a cardConent below div .
+cardConent have title , price, saleprice (). Below the price add a card footer for edit/delete functionality. now we have to render it in Product page.Adding product also adding and getting fethed in product page.
+21. Now we have to add edit and Delete functionality, for edit we need the current edit id,for this we need state, pass setFormData , setProductId, setOpencreatProductDialog as props. and use this in onClick of edit button. in this edit we dont want to reupload the image, so for this pass setProudctid to image compoent and if there  is an curentID then we disable image copoennt. and give the div an opacity of 20%
+22. there is an issue so when we click on edit and again click on Add product the form is already filled we dont ahve this functionality. os lets fix thois. to fix we need to setTheFormData to  iniitalsTte and setCurrentIRD to nll in he onOpenChange of Sheet compoennt.
+23. Now we have to work on this edit functionality. to check if we have editing or adding we can do it by the setCurrentID, based on the we can change onSubmit. chang the  button and TItle of Sheet. Now in OnSubmit of product page, we dispthc editProduct if currentID  !null. and addNEwproduct when its null. log the editProduct Data for now.
+24. Now again dipatch all product set the form to initial dailog false and id to null. and it will work fine.
+25. WE will do some improvement in this code. if any field of form is empty then diable the button. create a function for this. create a isFormValid function, it will cehck if any value in form is not empty.
+pass it in commonForm. There one catch here salePrice is optional it wont work like in our implmentation.
+26. Now we have to work on Delete functionality. create deleteHandler in product, pass it as prop in product-tile,/. no on thi delete function dispatch delte product API witj id  , then check if the data is success then dispatch allProduct so that the delete item dont persist in uI.
+
+---- Logout and Shopping part  functionality ----
+
+1. Create a thunk for logoutUser, addCase for fullfilled logoutUser. create a handler for logout user when clicked on logoutButton, and dispatch logoutUser.
+2. Now work on shopping header. header>div>link home & span. Create a sheet and sheet trigerr then button and a span for header menu. now add sheetCOntent for smaller divice. for large add a div 
+3. Now we have to create our menuItems. before that create config for menuItems/. and export it. Now Create MenuItem. a nav then loop over menuItemConfig, and return a link with MenuITems. and add it to the respective divs.
+4. now create headerRIghtContent., add a div inside it add cart(inside button) and dropDwnMenu form shadcn. 
+5. add userName in login ctroller also. so thatwe can get it from useSelcotre, and display it to fllack,   and add some dropdown lavebvel and dropdown Item, for account and logout.
+6. lets start workring on listing page,. create a filter comp in shop. filter should show ip in left side of page with witdh og 300px and reamining should be he listing of products. filter should have a titole of filter, tehen the nameof filter option type and then inside filter option type.it should have a checkbox and label. 
+7. Now come back to listing page. lisitig should show All product tile, numberof product and a dropdown for sorting, now we will render the list of products.
+8. we will createa a product-tile for shopping.
+create a card compoennt it should have a image and badge for sale infist div. and a cardConetn and cardFooter . in content it should have title, category brand price and saleprice, in footer it shoudd have a button.
+9. now we have to create a different contorller for fetchALl product.
+10. now create a productCOntroller it shold return  the data for products in DB. now create the route for shopping products it should have the the controller for the get route. and export this router, and use this routee in server.
+11. now switch back to cleint, and create a shop product-slice. give initialsState and createFethALlFIltereredProoducts thunk. and add builder casees to it. and exort the reducer and the thunk.
+12. dispatch the fetchAllFIlterredRpoducts and useSelector hook to get the list of products and pass it as props in our listig/productTIle page. Now create a differentconfig so that we can convert it to uppercase. all productsITems get fetched succesfully and its displaying to the UI.
+13. Now we have to work on FIlter and Sorting fucntionality. now change the number of prorduct in number of product span. with the number of product coming.
+14. Create two state for sort and fitlers. add to sort add value as sort and onValueCHange add handleSort.
+15. log the value for now hwenever we click on dropDOwn we get the current selecte Sort item. for now leave it as it is, ork on filter, pass filer and handleFilter func as a prop to filtercompoent. the need for this to check which section we are clicking and which option are selecting. add onCHange to this checkbox and add handleFilter to it. its logging.
+16. now we have to add hte actuall functionality. handleFilter, in this handleFier pass sectionId and option as params, store filters to cpyFilters. get the index of currentSectionId, we can get by getting the keys of cpyFIlter and byfinding teh index of passed sectionId, if no id is there it mean no fileter is appllied then we give the pass id the value of getCurrentOption. else we cehckif the option is already selected or not if its already selecte d then we remove it from copyFilter Obj and if not selected then wepush the opt to the cpyFlter array. and at lst setFItlers to cpyFIlter.
+17.  now on page load we want o  by deafult select some value to sort, and filters useEffect for this actionITems.
+18. Now we have to make this select the checkboxon page load also. for this we give checked property of Chekcbox.
+19. now whatever we are selecting in our checkbox , we need to show it to the url.  and based on that we are gonna call the API with the filter params.
+20. usethe useSearchParams hook, to set the searchPArams hook and it chanes on filer change, create a helper function to createQueryString.
+21. Now we have to update our API side, use req.query and get category, brand and sortBy. this api logic is way to confusiing. DOTO LATER.
+22. we hav eto update u=our thunk now. this fetchALl will take two params filter and sort. and get  the query by using URLsearchParams. and change the lisitng page. based on , and pass these as ags in fetchAllFilteredProducts.
+23. its all working. Now need to work on Details pages. goto product-collter we create one more method to getProductDetails. we will be finding the product by ID ands send it as res. add a route to this productDetails.
+24. Createa thunk for Product Details. and add onLcik to the parent div on prodcutTIle, add clickhandler this handler should be tehre in lisitng as passed a prop to prduct-tile.
+25. we need to open a modal when its clicked. create a details comp adn it should have dialog and dialogcontent inside it  a img, title, and paragraph.
+passopen setOpen and product detais as prop. its working.add addition things like price slaeprice, button , review , usernmae avatar and rating and review testt. its just an statisc data, will come to it later point of time
+
+
+    ---- Cart ----
+
+1. Createa model for cart, i should have userID , items- productId and quantity.
+2. Create four controllers for cart Items, addCartITems, fetchCartItems, updateCartItemQuantity, and deleteCartItem.
+3. import Cart and PROduct  model. in AddtoCart add cartItems to cart, save it to DB and send an res to cart.
+4. now we will start working on FetchCartITems. Then updateCartItems. and delte cart Items. create cart-routes for fetching those contorollers. and export them. and import them in servers with shop/cart route. backedn aprt is done . ew will work on cart slice.
+5. Create cart-slice. a thunk for AddTOcart. it shoul dhave userId, productId, and quqnity as param and we have to also post this and return response.datas. Now fetchCartITems thunk, its pretty staight forward we will suse get method the fech the cartitem with userId passed and return  in res.data. for delte just pass userID and productID as params. and use del method and return res.data. for updateCartItem pass userId , productId and quantity as params and in body and retrun res.data.
+6. now we will work on addCases. Add four of them to builder casees with teh pending, fulfilled and rejected. and use this in store. its owrking
+7. how to have to opencart whenever user clicks on userCart button. so create two comoent , one wrpaerr and one content. on click of the button the sheet will open , the wraperr inside the wrapper there will be sheetContent. inside conetn there should be a header nd beow that render the Itemcontext componenet. below the Content add  div for toal and total amount. and at last a button to checkout.
+8. Now we have to work on onCLick part on "AddtoCart"
+got to product-tile addOnclick to Addtocart, with handleAddCArt(id) it should come as prop from listing. for now just log the id to the console.
+9. now dispatch addTOcart and log to check if tis fullfilled,  then again a fetchCartItems is payload is sucessfull. now get cartItems from state. check if we are getting sucess. its success abel to log cartItem to console.
+10. now we ahve to render this cartItem. now pass this cartItem in wrapperCart. now dispatch fetchcartITems in header. and are render userCartITemsOCntent with CcartItems. for now it should just render a template data with total number of products.
+11. now we have to craete the structure of UserCartItemsContent. in this comp create aimg and adiv inside div an icon of -,+. in between these button add a quantity as wel. and also display total price. 
+12. Now when we are adding item to the cart ,we are goin to show a toast component. now we ahve to work on the oncrease,decrease and delete functionality. for delete dispatch deleteCartITem. and update cart Quantity also.disable teh button on 1 quanitiy . update the total price also . createa var and use reduce emthod to loop and get toal amount and show it to UI. add to cart should also work in productdetails. so pass in the handleAddTocArt
+13. There is a bug in our code when we click on product to open amodal, and close it and go to diffrent page and switchback modal will again open automatically, we dont want htis beheeviour, for we will create a reducer in our productSlice. setProduct details and make the productDetailsas niull and export it createa handleDialogclose as pass it in openCHange.
+
+
+---- Homepage ----
+
+1. Now we will satrt working on homepage. copy assest folder from his to mine copy, create a array for images and loop over them to dispaly. add arrow bars to left and right. below that. a new section for category. then create a cateogwithIcon and loop over it to displat label and icon.
+2. now we have to implement the slider functionality on the image. create a sate for currentSlide. onLCick of the icons we settehCUrrent slide and also . t should change every 5 secs , for this useefect.
+3. what we wnat to do now if to render featured product to this UI, for this fetchFiltersPRoduct and for now just log productList. its wroking. createa new section below the other secion for feature products. and redner the productTIle. its working we will come  back to it later.
+4. now we willowork on Shop by brand. create a brandByIncon and loop over it to display. 
+5. just copy paste the section for brandIcon. and it should be done
+6. now we have to update our url based on the click on cateogry so that it only show that matched category items. for create a function called handleNavigateToListingPage with categoryItems as param.
+7. Now we we work on this handeler, so first remove the filters form sessionStorage. and give the current filter with passed section and currentITem id. and set it to filters SS. now naviagte to lisintg page, and our useEffect will tkae place that will render the page with the filter. now we have to do this functionality on brand also so copy paste this logic. just change the params. its workingfine.
+8. Now this same functionality we have to do for MenuItem. so in this onCLick we have use the same funciton handleNavigateToListingPage
+change will we we will set null if id is home, otherwise we will set the categoery with clicked id. and pass menuItem as params. its working.
+9. will continue to start working on part 3 , like wehn clicekd on product what should happens, we will open the product details. and add to cart should add it to cart. and import PRoductdetailsdialog at below of section. and when we click it should open the modal .
+
+---- ACcount ----
+
+1. we have to create modal for address. create four cocontroller like edit, deete, fetchall and All and routes and add them in our server.js. basic tempalte is done.
+2. now go back to controllers. and have to work on the those four controller in details. import address modal. 
+for newlycreateAdress andget all the thing form req body and if aif anyone of them doenst exist then return a false status. create a new adress adn save it to DB and res with the data. and for add edit address user ID mad address id from params nad if doesnt give error and if it sthere then get address form the ID and res with this adress, similarly for fetchAll addreess and deltee .ALl ok
+3. now we will move to async thunk. first creae a initalState with isloadig and addressList, reducers and extrareducer. and creaet four async thunk.
+4. FOr addNewAdrerss give form data and fetch to add. ro fetAllAddresses pass userId as param adn reurn data  , similarly create for update and delete, and also create case builders for these. export the reducer and import it in store. it working. nowe will start woring on UI
+5. create account page in shopping-view, div ddiv and  aimg. we will create tabs for orders and address. create also cmpoennet for this.
+6. for address componenet we need a form to store adress so cratea formCOntorll for address. and add a card for this adress, and at last use the common form  and onSubmit use a handler function to handle address. for now just do preverntDefault.
+7. Now add Adresscard to show the adress submitted. it should shoudl add filed to UI. back to address compo check if fold is valid.
+8. Now we have to integrate our API. come to this address apage useDIspatch to dispatch the addNewAddress . passformData and iserId taht should come forrom auth slice. and heck the logging status/. then if data is success the fetchAllAddress and emplty the dormData useffect to fetchAllAddress again and get the addresslist fromseelector. import address card to show the addess address in UI. tis woring. now add a footer for edit/delete.
+9. Add a delete functionality. in adress and pass in prop to addressCArd. log the current address passed in as prop for now. and hen fetchAllAddress if its sucees. 
+10. now we have to work on edit functionality. in edit funcitonality we have to set the ID to correct id and setFormData. In handleMangeAddress if there is a currentId mean we wan to edit so dispatch editAddress otherwise addAddress. its working. In handleManageAddress add check if addressList greater then 3 then reutrn . since we dont wnant to display more than 3.
+11. NOw we have to go to checkOut page when user clicks on checkout button. and close the sheet. we will start working on cehckout layout.
+12. the first div sould display a banner.secod div will show address and cart items side by side. for cart loop over carts. it sould hsow the cart items to the UI. And show the totalcartPrice also. and add a button to checkout.
+13. create roder componet for admin and shopp. in shoporder . Install table from shadcn add card component with header and content. then a table for order. copy paste the same thing in admin. its owrking. create a dialog box for adminview and shopping view.
+14. dialog should have a order detailss,. there should be a diffreent shopping detal componennt. That can be used to update order details.
+
+---- Payment ----
+
+1. Create a oder schema for Order and export it. install paypal server sdk. Create paypal developer dashboard account. and create a helper for paypal.configure it with mode, clientID and client_secret.and export it.
+2. Now create controller for order. createOrder an captureOrder. lot of backedn logic there. for now just createOrders and create route for it. nad add it in server.
+3. Create slice for shopORder and export it and import it in store,. the initState should have isLoading order and approvalURL. now we have to work on async thunks for createNewOrder,. now we have to add casees for it. in fullfiled it should have approval URL, orderId. 
+4.  now on the address we need to select that address when we are clicking on it. FOr this purpose we will come to checkout page, add a handler function on checkout with paypal button for now, craete a orderData object with userId, cartItems, addressInfo , whatever that we are giving in order modal. based on this we have to do. for addressInfo we will create a useState hook. and pass the currentSelectedAddress as prop in adres compoennt then in address card then in card , onCLick of it we will set it with adress info.
+5. now try loging it to the console. the currentSelectedAddress. we getting. now we have to fill addressInfo. with the details as per our model. try loggin it in console, see if it works. its loggin.
+6. is if success then setPaymentStart to true, get the approval URL from shopOrder state. if its there then we go to the paypal URL. use default sandox user page to login to paypal account now it should return to paypal return page. create a page for paypal return and add it to the shoppingROutes in App.
+7. now we ahve to work on Capture payment controller. add it to our routes. we start owrking on slices. the slice should have pauemntid payerId and orderId.
+8. Now we will built the UI of paypal return. a card. use location to get location, to get paymentID payerID, then useEffect to capture payenet. with paymentID, payerId and order id, and if its successfull then remvove the current it and redict to payment success page. create a payment success page. and import it in shop routes. it should redicert to success page
+9. Now we have to work on  check validation . for now just two check with cartITemlength and currentSelectedAddress.
+10. we have to create two more order controllers. getAllOrdersByUSer and getORderDetails.
+and add route for this
+11. create slice for these two controllers.and have to add cases for it. 
+now we will go to order compoenet in shop. dispatch allOrderByUSerId with userid , able to get orderList, ..
+11. with this data we will paint our tableROw. now we will  fetch the orderData for details. and on clik we wiill update the propmt with the fetched data. and on close of the prompt we will empty the orderDetails. create a reduer forthis to set the orderDetails to null. now we dispatch this onCHnage of dialog. 
+12. Now wewill work on order details, and fill the datass. now the same thing we have to render to admin view. and create controllers for admin and routes. Now create admin order slice.
+13. now we will create thefunctionality for AdminView. copt the tableBody from from shoopping. and similary like in shopOrder wwe will implenete the funcionality, first fetch the order details on click of button, and on change reset the form by creating a redcuer in slice. and also we have to fetchAllproducts using dispatch.Copy paste the context from shopping. pass in orderDetails as prop in detials page. Now we have to work on API for updating the order.
+14. switch to order-Controller. create a controller for updateOrderStatus. and add route for it.
+15. now we have to create a thunk to updateOrderStatus. for now in admin. it should have id and orderStatus as params and put method and return res.data. on handleUpdateStaus of adminOrderDettail. check the formData by loggin it on submit it. its ok, then dispatch updateOrderStatus with Id and orderStatus. and log, it working. if is success then we dispatch the getAllOrdersForAdmin and gerOrder and setInitialFOrmData.
+16. Now make changes in badge component in shopping view. also add a toast when updating the orderStatus.
+
+--- Some bug fixes/Improvements ---
+
+1. In shopping page there is no. link to go to all product page. we have to work on that. isssue 1.
+2. add  a new config item for listing of proudcts in our config shoppingVIewHeaderMenuItems.
+3. one more bug is that when we have alreadry in listing page with, and licking on the section. like men owmen, then it will only works on first n=time of time, other time it will only go to listing page. so first we have to not apply any filter on click of products. in header compo cuurentfilter curretnMenuItem shouldnt be equal to products.
+4. now if the pathnameincludes listing and have filter apllied then we update the search params with category of clicked item. or else navigate to currentMenuItem path. url is changing but page is not . so we have to go to listing page.
+5. in useEffect of setFilters and setSort we have to pass a depedency array. the depedency array should be the searchParams. with the category and pass in as depedency. issue 1 is fixed.
+6. we will display how much prouctsare in stock, based on that we will workon adding the product to cart.
+7. in order-controller , import Product controller.
+when user order we need to remove the ttoal stock by the quantity of order made.
+8. and in listing when we cehckout that quantity of stock gets change whenever we make payment. now we will change the badge icon on product tiles with number of stocks left for order. if stock will be zero then out of stock. if less then ten then number of items left, and also if 0 then change the button text to out of stock. now if we have less items then the quantity that we are ordering then we have to show some kind of error.  also we have to show stock quanitty in details and cart page.
+9. in details page also have added the out of stock/ addtocart. now on listing when we try to add more then the stokc quantity in cart we will toast with error. it should be within the handleAdd to Cart. this same funcionality we have to implemenent in cart Details and product detils page.
+10. Now we will implement our search feature in product listing. first create controller to searchProduct. then create a route. and add it in server. now start working on the slice. in slice create a slice initalStaet would have loading and searchResults. and in thunk we will pass keyword apas params and return data. now work on builder casees. and import it in store.
+11. Now we have to create our searchPage. first we will a add a object for search in our shoppingViewHederMenuItems config. And create a page for this. and add a route in App jsx. now add a input and at the end of page show search Results. now we have to handle the input. using useState. and to dispatch we use useEffect with the keyword only we dispatch when keyword length is greater then 3. then we set the searchPrams with the keyword. and ispatch with the keyword. just chekc iff we are getting the searchREsults or not by loggin it to console.
+12. its loggin correctly. and now we will render it. and if input is empty we need to reset it. so we create a reducer in slice. and set the searchResult as empty . its working. now we have to handle add to cart and show product detials also in this search page.
+
+--- Review functionality ---
+
+1. we will work on revew functionality. so first create a model. then controllers. it should have two methods addProudctReview and getReviewsss. now work on route and addit in server.
+2. now we will start working on Slice. create two slice addReview and GetReviews , addReview should have data as param and it should have post emethod, and getReivew should have id as params now add extra reducers to it. and add it to the store.
+3. we will create a star-rating component for our review of size 5. and import it in product-details compoent at end. we will pass rating as props in this star. and will give styling to it.
+4. now we will add state for review input. and then handleRatingChange handler for adding stars logic. and pass it to star rating. Now create a handleAdd review onSubmit of button. just we have to fill the data baeed on model and log it to the console.we are getting forbidden error. there was a typo . its logging. then dispatch getReviews with id, and get the state from selector. also useEffect to fetch the getReivew on change of productDetails. log reviews. getting the review data.
+5. now we have to render i o UI. its owrking checked with multi users also. once the handleAddReview issubmitted we reset teh state of star and message. now we have to work on review average. review part is done.
+
+--- improvements ---
+
+1. fist in / route we will check auth. and make changes in our chekc auth. if location.pathanme is / then we navigate to auth/login if not auth or else based on admin/user we will redirect the user.
+2. now we will  show how many cart items are there in cart icon. in header we will add it just after cartIcon.
+3.now we will work on loader onCheckoutwithPaypal and selection of address. goto address card. and add a brorder of red on click of selected address, Add a loader. also add a button on succesfull payment to go to account.
+4. now we will complete our admin dashboard. in Dashboard we will be uploading images that will be shown in shop homepage.
+5. For this purpose , we gonna create a features file in models. and export it, createa controller for this feature. it should have addFeature and getFeatues. now we have to create a common route. for add and get images since it will be used for both admin and shop. we will add these route in server js.
+6. Now we will start working on admin dashboard from client side. just copy pate image file, upladed image ul and imagelaodingstate form products. also teh image upload compoent from the product to our admin dashboard.
+7. we will we write the className for image-upload.. add a custom styling. for adding some witha nd margin. Add a className in Button make it full width.. onClick of it we will handleUploadFeatureImage.Before that we will create a slice. thunk will be getFeatureImage and getFeature image. and slice will be commonSlice. and import it to the slice. 
+8. dispatch addFeatureImage and log it to the console. and also getFetureImages. and we get teh imagesURL in out featureImageList. now we will work on render it to the UI just  below the image. now we go to our homepage. we will get the feature image list. but will not use it for our rednder.
+
+--- Deploy ---
+1. create dotnev and in server config it. and create three var for Coulidnary name key and secret. similary do for paypal, mongoDB URL
+2. also for client add the API URL ignore the .env file in gitignore.
+3. Create repo and publish the change to the github. now go to render and on + click on webserives. root dir : server, build command: npm install.start command: node server.js, 
+4. for env copy paste from our env file. and deploy web services. serivce is live.. get the link and now creata static site.
+5. root dir : client, public dir: ./dist, deploy static site,
+6. We got aCORS error to fix this we need to change our clientURL in ENV. GO to dashboard. change the CLIENT_BASE URL. and deploy again. its working. but on refresh its routes not getttign found and cookies get reset.
+7.  change rewrite/redirect rules. with /* to /index.html . now ma uall deaploy with clear chache and deploy.
+8. page is reloading and its wprking, will work on cache. go to auth controller make secure as true.commit this. then maek chagne in cookie in auth controller. we send he token as res. then in initial stae set token. also on fullfill of loginUSer we will setToken and store it in sessionStorage. then in check auth we need to pass the token as autherization. and make chnage is authmiddleware. and appjsx use eefect of cehckauth will take otken as argument. and reset teh state on logout. make changes in header for logout.
+9.
+
+
+---END---
+
+**THere is one issue when token is exired there is check-auth always stays on pending
+** One more bug found Shopping page of normal user when we click in home then only search is getting routed when clicked, but when we lickon listing then on search then its taking the listing page routes.
