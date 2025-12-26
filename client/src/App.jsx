@@ -31,7 +31,7 @@ function App() {
   //   role: "admin",
   // };
 
-  let sujit = 'un used sujt';
+  // let sujit = 'un used sujt';
 
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
