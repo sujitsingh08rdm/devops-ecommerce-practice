@@ -1,10 +1,10 @@
-import { filterOption } from "@/config";
-import React, { Fragment } from "react";
-import { Label } from "../ui/label";
-import { Checkbox } from "../ui/checkbox";
-import { Separator } from "../ui/separator";
+import { filterOption } from '@/config';
+import React, { Fragment } from 'react';
+import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
+import { Separator } from '../ui/separator';
 
-export default function ProductFilter({ filters, setFilters, handleFilter }) {
+export default function ProductFilter({ filters, handleFilter }) {
   return (
     <div className="bg-background rounded-lg shadow-sm ">
       <div className="p-4 border-b ">
@@ -17,10 +17,7 @@ export default function ProductFilter({ filters, setFilters, handleFilter }) {
               <h3 className="text-base font-bold ">{keyItem}</h3>
               <div className="grid gap-2 mt-2">
                 {filterOption[keyItem].map((option) => (
-                  <Label
-                    key={option.label}
-                    className="flex items-center gap-2 font-medium "
-                  >
+                  <Label key={option.label} className="flex items-center gap-2 font-medium ">
                     <Checkbox
                       onCheckedChange={() => handleFilter(keyItem, option.id)}
                       //its cehcking if filters exist , and if keys are of obejct exist, will check if the particular keyItem Section exist and if we are checking if the clicked items index if its greater than -1 meants we are clicking.

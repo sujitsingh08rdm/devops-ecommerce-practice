@@ -1,0 +1,47 @@
+name: build-and-lint
+
+# triggers :define when this workflow should run
+# trigger on push to these branches
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+#define a job or multiple jobs
+
+jobs:
+  build-and-lint:
+    runs-on: ubunto-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install backend depedencies
+        working-directory: server
+        run: npm ci
+
+      - name: Lint backend
+        working-directory: server
+        run: npm run lint -- --max-warnings=0
+
+      - name: Install frontend depedencies
+        working-directory: client
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: client
+        run: npm run lint -- --max-warnings=0
+
+      - name: Build backend image
+        run: docker build -t backend ./server
+
+      - name: Build frontend image
+        run: docker build -t frontend ./client

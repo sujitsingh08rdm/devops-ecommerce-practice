@@ -1,28 +1,28 @@
-import "./App.css";
-import { Route, Routes } from "react-router-dom";
-import AuthLayout from "./components/auth/layout";
-import AuthLogin from "./pages/auth/login";
-import AuthRegister from "./pages/auth/register";
-import AdminLayout from "./components/admin-view/layout";
-import AdminDashboard from "./pages/admin-view/dashboard";
-import AdminProducts from "./pages/admin-view/products";
-import AdminOrders from "./pages/admin-view/orders";
-import AdminFeatures from "./pages/admin-view/features";
-import ShoppingLayout from "./components/shoping-view/layout";
-import NotFound from "./pages/notFound";
-import ShoppingListing from "./pages/shopping-view/listing";
-import ShoppingHome from "./pages/shopping-view/home";
-import ShoppingCheckout from "./pages/shopping-view/checkout";
-import ShoppingAccount from "./pages/shopping-view/account";
-import CheckAuth from "./components/common/check-auth";
-import UnauthPage from "./pages/unauth-page";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
-import { Skeleton } from "./components/ui/skeleton";
-import PaypalReturnPage from "./pages/shopping-view/paypal-return";
-import PaymentSuccessPage from "./pages/shopping-view/payment-success";
-import SearchProducts from "./pages/shopping-view/search";
+import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import AuthLayout from './components/auth/layout';
+import AuthLogin from './pages/auth/login';
+import AuthRegister from './pages/auth/register';
+import AdminLayout from './components/admin-view/layout';
+import AdminDashboard from './pages/admin-view/dashboard';
+import AdminProducts from './pages/admin-view/products';
+import AdminOrders from './pages/admin-view/orders';
+import AdminFeatures from './pages/admin-view/features';
+import ShoppingLayout from './components/shoping-view/layout';
+import NotFound from './pages/notFound';
+import ShoppingListing from './pages/shopping-view/listing';
+import ShoppingHome from './pages/shopping-view/home';
+import ShoppingCheckout from './pages/shopping-view/checkout';
+import ShoppingAccount from './pages/shopping-view/account';
+import CheckAuth from './components/common/check-auth';
+import UnauthPage from './pages/unauth-page';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { checkAuth } from './store/auth-slice';
+import { Skeleton } from './components/ui/skeleton';
+import PaypalReturnPage from './pages/shopping-view/paypal-return';
+import PaymentSuccessPage from './pages/shopping-view/payment-success';
+import SearchProducts from './pages/shopping-view/search';
 
 function App() {
   // const isAuthenticated = false;
@@ -31,31 +31,25 @@ function App() {
   //   role: "admin",
   // };
 
-  const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  let sujit = 'un used sujt';
+
+  const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = JSON.parse(sessionStorage.getItem("token"));
+    const token = JSON.parse(sessionStorage.getItem('token'));
 
     dispatch(checkAuth(token));
   }, [dispatch]);
 
-  if (isLoading)
-    return <Skeleton className="w-[800] h-[600px] rounded bg-black" />;
+  if (isLoading) return <Skeleton className="w-[800] h-[600px] rounded bg-black" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         <Route
           path="/"
-          element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-            ></CheckAuth>
-          }
+          element={<CheckAuth isAuthenticated={isAuthenticated} user={user}></CheckAuth>}
         />
 
         {/*  / means absolute path in react router, and path="login" means this */}

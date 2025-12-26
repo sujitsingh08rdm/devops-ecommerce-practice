@@ -1,4 +1,4 @@
-const Order = require("../../models/order");
+const Order = require('../../models/order');
 
 const getAllOrdersOfAllUser = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ const getAllOrdersOfAllUser = async (req, res) => {
     if (!orders.length) {
       return res.status(404).json({
         success: false,
-        message: "No orders found!",
+        message: 'No orders found!',
       });
     }
 
@@ -16,7 +16,7 @@ const getAllOrdersOfAllUser = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some Error Occured!",
+      message: 'Some Error Occured!',
     });
   }
 };
@@ -30,7 +30,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found!",
+        message: 'Order not found!',
       });
     }
 
@@ -39,7 +39,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some Error Occured!",
+      message: 'Some Error Occured!',
     });
   }
 };
@@ -54,7 +54,7 @@ const updateOrderStatus = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found!",
+        message: 'Order not found!',
       });
     }
 
@@ -62,13 +62,13 @@ const updateOrderStatus = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Order status is updated successfully",
+      message: 'Order status is updated successfully',
     });
   } catch (error) {
-    console.log(e);
+    console.log(error);
     res.status(500).json({
       success: false,
-      message: "Some Error Occured!",
+      message: 'Some Error Occured!',
     });
   }
 };

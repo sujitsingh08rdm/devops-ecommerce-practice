@@ -1,15 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import axios from "axios";
-import { Skeleton } from "../ui/skeleton";
+import React, { useEffect, useRef } from 'react';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react';
+import { Button } from '../ui/button';
+import axios from 'axios';
+import { Skeleton } from '../ui/skeleton';
 
 export default function ProductImageUpload({
   imageFile,
   setImageFile,
-  uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
   imageLoadingState,
@@ -45,7 +44,7 @@ export default function ProductImageUpload({
   function handleRemoveImage() {
     setImageFile(null);
     if (inputRef.current) {
-      inputRef.current.value = "";
+      inputRef.current.value = '';
     }
   }
 
@@ -57,11 +56,11 @@ export default function ProductImageUpload({
 
     const data = new FormData(); // didnt understood
     //Add a key-value pair (can be text, blob, or file)
-    data.append("my_file", imageFile);
+    data.append('my_file', imageFile);
     //Sends it properly formatted to the server
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/admin/products/upload-image`,
-      data
+      data,
     );
     if (response?.data?.success) {
       setUploadedImageUrl(response.data.result.url);
@@ -74,16 +73,12 @@ export default function ProductImageUpload({
   }, [imageFile]);
 
   return (
-    <div
-      className={`w-full  mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
-    >
+    <div className={`w-full  mt-4 ${isCustomStyling ? '' : 'max-w-md mx-auto'}`}>
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className={`${
-          isEditMode ? "opacity-20" : ""
-        } border-2 border-dashed rounded-lg p-4`}
+        className={`${isEditMode ? 'opacity-20' : ''} border-2 border-dashed rounded-lg p-4`}
       >
         <Input
           id="image-upload"
@@ -98,7 +93,7 @@ export default function ProductImageUpload({
           <Label
             htmlFor="image-upload"
             className={`${
-              isEditMode ? "cursor-not-allowed" : ""
+              isEditMode ? 'cursor-not-allowed' : ''
             }  flex flex-col items-center justify-center h-32 cursor-pointer`}
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />

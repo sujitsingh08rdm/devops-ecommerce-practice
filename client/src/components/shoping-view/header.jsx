@@ -1,21 +1,10 @@
-import {
-  HousePlug,
-  LogOutIcon,
-  Menu,
-  ShoppingCart,
-  UserCog,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { useDispatch, useSelector } from "react-redux";
-import { shoppingViewHeaderMenuItems } from "@/config";
+import { HousePlug, LogOutIcon, Menu, ShoppingCart, UserCog } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Button } from '../ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { shoppingViewHeaderMenuItems } from '@/config';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,32 +12,32 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { logoutUser, resetTokenAndCredentials } from "@/store/auth-slice";
-import UserCartWrapper from "./cart-wrapper";
-import { fetchCartItems } from "@/store/shop/cart-slice";
-import { Label } from "../ui/label";
+} from '../ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { resetTokenAndCredentials } from '@/store/auth-slice';
+import UserCartWrapper from './cart-wrapper';
+import { fetchCartItems } from '@/store/shop/cart-slice';
+import { Label } from '../ui/label';
 
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  console.log(searchParams);
+
   function handleNavigate(getCurrentMenuItem) {
-    sessionStorage.removeItem("filters");
+    sessionStorage.removeItem('filters');
     const currentFilter =
-      getCurrentMenuItem.id !== "home" &&
-      getCurrentMenuItem.id !== "products" &&
-      getCurrentMenuItem.id !== "search"
+      getCurrentMenuItem.id !== 'home' &&
+      getCurrentMenuItem.id !== 'products' &&
+      getCurrentMenuItem.id !== 'search'
         ? { category: [getCurrentMenuItem.id] }
         : null;
 
-    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    location.pathname.includes("listing") && currentFilter !== null
-      ? setSearchParams(
-          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
-        )
+    sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+    location.pathname.includes('listing') && currentFilter !== null
+      ? setSearchParams(new URLSearchParams(`?category=${getCurrentMenuItem.id}`))
       : navigate(getCurrentMenuItem.path);
   }
 
@@ -80,7 +69,7 @@ function HeaderRightContent() {
     // dispatch(logoutUser());
     dispatch(resetTokenAndCredentials());
     sessionStorage.clear();
-    navigate("/auth/login");
+    navigate('/auth/login');
   }
 
   useEffect(() => {
@@ -100,16 +89,14 @@ function HeaderRightContent() {
         >
           <ShoppingCart className="h-6 w-6" />
           <span className="absolute top-[-5px] right-[-2px] text-xs font-bold">
-            {cartItems?.items?.length || "0"}
+            {cartItems?.items?.length || '0'}
           </span>
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
-            cartItems && cartItems.items && cartItems.items.length > 0
-              ? cartItems.items
-              : []
+            cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []
           }
         />
       </Sheet>
@@ -126,7 +113,7 @@ function HeaderRightContent() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              navigate("/shop/account");
+              navigate('/shop/account');
             }}
           >
             <UserCog className="mr-2 h-4 w-4" />
